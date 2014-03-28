@@ -1,122 +1,66 @@
-#R1 Connect Library for iOS
-
-##Overview
+#1. System Requirements
 Downloading LibR1Connect.a allows you to begin the integration process of adding R1 Connect services to your app. It supports all mobile and tablet devices running iOS 5.0 with Xcode 4.5 and above. The file itself contains the library and headers of the R1 Connect SDK for iOS. The library supports the following architectures:
 
-*	arm7
+*   arm7
 *	arm7s
 *	arm64
 *	i386
 *	x86_64
 
-##Setup
-The following steps will explain how to integrate with R1 Connect to enable both push notifications and event tracking. You have the option to use the [R1 Connect Demo](https://github.com/radiumone/r1-connect-demo-iOS/tree/master/DemoApplication) as a sample app project to begin with or you can use your own app. Once you have downloaded the R1 Connect Library from this repo you can add it to the same directory as your project. 
 
-###Required Libraries 
-Your application must link against the following frameworks:
+#2. SDK initialization
 
-![Required Libraries](https://raw.github.com/radiumone/r1-connect-demo-iOS/readme_images/ReadmeImages/required_libraries.png)
-
-###How to Add the R1 Connect files to Your Project
-
-1.	Open up your iOS project in xCode.
-2.	Select File -> Add Files to “[your project]”
-3.	Select Folder with R1Connect library and headers in dialog
-4.	When the dialog box appears, check the Copy Items into destination group’s folder checkbox. 
+## a. Import files
+1.	Download the r1connect lib files:
+           git clone git@github.com:radiumone/r1-connect-demo-iOS.git
+2.	Open up your iOS project in xCode.
+3.	Select File -> Add Files to “[YOUR XCODE PROJECT]” project
+4.	Select all files in "Lib" Folder from the repo you just cloned
+5.	When the dialog box appears, check the Copy Items into destination group’s folder checkbox.
+ 
 
 ![Files in xCode project](https://raw.github.com/radiumone/r1-connect-demo-iOS/readme_images/ReadmeImages/library_files.png)
 
-###Link against the static library
-
+## b. Link the static library
 Check that the LibR1Connect.a file in the “Link Binary With Libraries” section is in the Build Phases tab for your target. If it’s absent, please add it.
 
 ![Linked binaries](https://raw.github.com/radiumone/r1-connect-demo-iOS/readme_images/ReadmeImages/link_with_binary.png)
-
-###Check Background modes
-
+ 
 Check Background modes switch is turned on in Capabilities tab for your target. If it’s turned off, please turn on.
-
-![Background modes](https://raw.github.com/radiumone/r1-connect-demo-iOS/readme_images/ReadmeImages/enable_background_mode.png)
-
-
-###Setting up your App Delegate
-
+ 
+## c. initialize the SDK
 You will need to initialize the R1 Connect Library in your App Delegate.
-
 ####Import the required header files
 At the top of your application delegate include any required headers:
 
-
-•	If you want to use Analytics (without push notification)
 
 ```objc
 #import R1SDK.h
 ```
 
-•	If you want to use Analytics and Push Notifications (optional)
- 
-```objc
-#import "R1SDK.h"
-#import "R1Push.h"
-```
 
 ####Initialize R1Connect Instance
 
+
 ```objc
-- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
-{
-    R1SDK *sdk = [R1SDK sharedInstance];
+- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:
+(NSDictionary *)launchOptions {     
+    R1SDK *sdk = [R1SDK sharedInstance];  
     
-    // Initialize Anlaytics
-    sdk.applicationId = @"[Application ID]"; 
-    sdk.applicationUserId = @"[(Optional) Application User Id]";
-    
-    
-    // Initialize Push Notification (Optional)
-    sdk.clientKey = @"[Your Client Key]";
-    [[R1Push sharedInstance] handleNotification:[launchOptions valueForKey:UIApplicationLaunchOptionsRemoteNotificationKey]
-                                 applicationState: application.applicationState];
-    [[R1Push sharedInstance] registerForRemoteNotificationTypes:(UIRemoteNotificationTypeBadge |
-                                                                 UIRemoteNotificationTypeSound |
-                                                                 UIRemoteNotificationTypeAlert)];
-    
-    // Start SDK
-    [sdk start];
-    
-    return YES
+    // Initialize Anlaytics      
+    sdk.applicationId = @"[YOUR APPLICATION ID]";  //Ask your RadiumOne contact for an app id
+    sdk.applicationUserId = @"[(Optional) Application User Id]";     
+    sdk.location = ...                   
+    // Start SDK     
+   [sdk start];      
+    return YES 
 }
 ```
 
-####Register for Remote Notifications
-
-```objc
-- (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken
-{
-    [[R1Push sharedInstance]registerDeviceToken:deviceToken];
-}
-- (void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error
-{
-    [[R1Push sharedInstance]failToRegisterDeviceTokenWithError:error];
-}
-- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo
-{
-    [[R1Push sharedInstance]handleNotification:userInfo applicationState:application.applicationState];
-}
-```
- 
-Push is disabled by default. You can enable it in the *application:didFinishLaunchingWithOptions* method or later.
-
-```objc
-[[R1Push sharedInstance] setPushEnabled:YES];
-```
-
-
-CAUTION: If you enabled it in the *application:didFinishLaunchingWithOptions* method, the Push Notification AlertView will be showed at first application start.
-
-#Emitter & Push Parameters
+## d. advanced settings
 The following is a list of configuration parameters for the R1 Connect SDK, most of these contain values that are sent to the tracking server to help identify your app on our platform and to provide analytics on sessions and location.
 
-##Configuration Parameters
+####Configuration Parameters
 
 ***applicationUserId***
 
@@ -186,47 +130,15 @@ To disable automatic session tracking, set this to a negative value. To indicate
 By default, this is 30 seconds.
 
 	[R1Emitter sharedInstance].sessionTimeout = 15;
-	
-#Push Tags
-You can specify Tags for *R1 Connect SDK* to send *Push Notifications* for certain groups of users.
-
-The maximum length of a Tag is 128 characters.
-
-*R1 Connect SDK* saves Tags. You do not have to add Tags every time the application is launched.
-
-***Add a new Tag***
-
-	[[R1Push sharedInstance].tags addTag:@"NEW TAG"];
-	
-***Add multiple Tags***
-	
-	[[R1Push sharedInstance].tags addTags:@[ @"NEW TAG 1", @"NEW TAG 2" ]];
-	
-***Remove existing Tag***
-	
-	[[R1Push sharedInstance].tags removeTag:@"EXIST TAG"];
-	
-***Remove multiple Tags***
-
-	[[R1Push sharedInstance].tags removeTags:@[ @"EXIST TAG 1", @"EXIST TAG 2" ]];
-	
-***Replace all existing Tags***
-
-	[R1Push sharedInstance].tags.tags = @[ @"NEW TAG 1", @"NEW TAG 2" ];
-or
-
-	[[R1Push sharedInstance].tags setTags:@[ @"NEW TAG 1", @"NEW TAG 2" ]];
-	
-***Get all Tags***
-	
-	NSArray *currentTags = [R1Push sharedInstance].tags.tags;
 
 
-#Emitter Events
+#3. Activate Analytics Module
+## a. Standard Events
+
 
 The R1 Connect SDK will automatically capture some generic events, but in order to get the most meaningful data on how users interact with your app the SDK also offers pre-built user-defined events for popular user actions as well as the ability to create your own custom events.
 
-##State Events
+####State Events
 
 Some events are emitted automatically when the state of the application is changed by the OS and, therefore, they do not require any additional code to be written in the app in order to work out of the box:
 
@@ -240,7 +152,7 @@ Some events are emitted automatically when the state of the application is chang
 
 **Resume** - emitted when the app returns from the background state
 
-##Pre-Defined Events
+####Pre-Defined Events
 
 Pre-Defined Events are also helpful in measuring certain metrics within the apps and do not require further developer input to function. These particular events below are used to help measure app open events and track Sessions.
 
@@ -248,20 +160,11 @@ Pre-Defined Events are also helpful in measuring certain metrics within the apps
 
 **Session End** - As the name implies the Session End event is used to end a session and passes with it a Session Length attribute that calculates the session length in seconds.
 
-##User-Defined Events
+####User-Defined Events
 
 User-Defined Events are not sent automatically so it is up to you if you want to use them or not. They can provide some great insights on popular user actions if you decide to track them.  In order to set this up the application code needs to include the emitter callbacks in order to emit these events.
 
 *Note: The last argument in all of the following emitter callbacks, otherInfo, is a dictionary of “key”,”value” pairs or nil*
-
-**Action**
-
-A generic user action, such as a button click.
-
-	[[R1Emitter sharedInstance] emitAction:@"Button pressed"
-        			  				  label:@"About"
-                      				  value:10
-                  				  otherInfo:@{"custom_key":"value"}];
 
 **Login**
 
@@ -277,12 +180,8 @@ Records a user registration within the app
 
 	[[R1Emitter sharedInstance] emitRegistrationWithUserID:[R1Emitter sha1:@"userId"]
                                               userName:@"userName"
-                                                 email:@"user@email.com"
-                                         streetAddress:@"streetAddress"
-                                                 phone:@"phone"
                                                   city:@"city"
                                                  state:@"state"
-                                                   zip:@"zip"
                                              otherInfo:@{"custom_key":"value"}];
 **Facebook connect**
 
@@ -290,9 +189,7 @@ Allows access to Facebook services
 
 	NSArray *permissions = @[[R1EmitterSocialPermission socialPermissionWithName:@"photos" granted:YES]];
 
-	[[R1Emitter sharedInstance] emitFBConnectWithUserID:[R1Emitter sha1:@"12345"]
-                                       			   userName:@"user_name"
-                                      			permissions:permissions
+	[[R1Emitter sharedInstance] emitFBConnectWithPermissions:permissions
                                   				  otherInfo:@{"custom_key":"value"}];
 
 **Twitter connect**
@@ -329,7 +226,7 @@ Basically, a page view, it provides info about that screen
                                   					   documentPath:@"path"
                                      					  otherInfo:@{"custom_key":"value"}];
 
-###E-Commerce Events
+####E-Commerce Events
 
 **Transaction**
 
@@ -402,7 +299,10 @@ Basically, a page view, it provides info about that screen
                                         			   otherInfo:@{"custom_key":"value"}];
 
 
-##Custom Events
+
+##b. custom events
+
+
 
 With custom events you have the ability to create and track specific events that are more closely aligned with your app. If planned and structured correctly, custom events can be strong indicators of user intent and behavior. Some examples include pressing the “like” button, playing a song, changing the screen mode from portrait to landscape, and zooming in or out of an image. These are all actions by the user that could be tracked with events.
 
@@ -413,3 +313,113 @@ To include tracking of custom events for the mobile app, the following callbacks
 	// Emits a custom event with parameters
 	[[R1Emitter sharedInstance] emitEvent:@"Your custom event name"
 			  			   withParameters:@{"key":"value"}];
+
+
+
+
+
+
+#4. Activate Push Notification Module
+
+##a. initialize module
+
+
+####Setup your App Delegate
+
+```objc
+- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
+{
+    R1SDK *sdk = [R1SDK sharedInstance];
+    
+    // Initialize SDK
+    sdk.applicationId = @"[Application ID]"; 
+    sdk.applicationUserId = @"[(Optional) Application User Id]";
+    
+    
+    // Initialize Push Notification
+    sdk.clientKey = @"[Your Client Key]";
+    [[R1Push sharedInstance] handleNotification:[launchOptions valueForKey:UIApplicationLaunchOptionsRemoteNotificationKey]
+                                 applicationState: application.applicationState];
+    [[R1Push sharedInstance] registerForRemoteNotificationTypes:(UIRemoteNotificationTypeBadge |
+                                                                 UIRemoteNotificationTypeSound |
+                                                                 UIRemoteNotificationTypeAlert)];
+    
+    // Start SDK
+    [sdk start];
+    
+    return YES
+}
+```
+
+
+####Register for Remote Notifications
+
+
+```objc
+- (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken
+{
+    [[R1Push sharedInstance]registerDeviceToken:deviceToken];
+}
+- (void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error
+{
+    [[R1Push sharedInstance]failToRegisterDeviceTokenWithError:error];
+}
+- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo
+{
+    [[R1Push sharedInstance]handleNotification:userInfo applicationState:application.applicationState];
+}
+```
+ 
+Push is disabled by default. You can enable it in the *application:didFinishLaunchingWithOptions* method or later.
+
+```objc
+[[R1Push sharedInstance] setPushEnabled:YES];
+```
+
+
+CAUTION: If you enabled it in the *application:didFinishLaunchingWithOptions* method, the Push Notification AlertView will be showed at first application start.
+
+
+##b. setup Apple Push Notification Services
+    TBD
+    
+##c. Segment your audience    
+
+You can specify Tags for *R1 Connect SDK* to send *Push Notifications* for certain groups of users.
+
+The maximum length of a Tag is 128 characters.
+
+*R1 Connect SDK* saves Tags. You do not have to add Tags every time the application is launched.
+
+***Add a new Tag***
+
+	[[R1Push sharedInstance].tags addTag:@"NEW TAG"];
+	
+***Add multiple Tags***
+	
+	[[R1Push sharedInstance].tags addTags:@[ @"NEW TAG 1", @"NEW TAG 2" ]];
+	
+***Remove existing Tag***
+	
+	[[R1Push sharedInstance].tags removeTag:@"EXIST TAG"];
+	
+***Remove multiple Tags***
+
+	[[R1Push sharedInstance].tags removeTags:@[ @"EXIST TAG 1", @"EXIST TAG 2" ]];
+	
+***Replace all existing Tags***
+
+	[R1Push sharedInstance].tags.tags = @[ @"NEW TAG 1", @"NEW TAG 2" ];
+or
+
+	[[R1Push sharedInstance].tags setTags:@[ @"NEW TAG 1", @"NEW TAG 2" ]];
+	
+***Get all Tags***
+	
+	NSArray *currentTags = [R1Push sharedInstance].tags.tags;
+
+#5. Activate Attribution Tracking Module
+##a. Track RadiumOne campaigns
+TBD
+##b. Track 3rd party campaigns
+TBD
