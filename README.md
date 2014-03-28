@@ -1,3 +1,21 @@
+#Table of Content
+- [1. System Requirements](#1-system-requirements)
+- [2. SDK initialization](#2-sdk-initialization)
+	- [a. Import files](#a-import-files)
+	- [b. Link the static library](#b-link-the-static-library)
+	- [c. initialize the SDK](#c-initialize-the-sdk)
+	- [d. advanced settings](#d-advanced-settings)
+- [3. Analytics Activation](#3-analytics-activation)
+	- [a. Standard Events](#a-standard-events)
+	- [b. custom events](#b-custom-events)
+- [4. Push Notification Activation](#4-push-notification-activation)
+	- [a. initialize module](#a-initialize-module)
+	- [b. setup Apple Push Notification Services](#b-setup-apple-push-notification-services)
+	- [c. Segment your audience](#c-segment-your-audience)
+- [5. Attribution Tracking Activation](#5-attribution-tracking-activation)
+	- [a. Track RadiumOne campaigns](#a-track-radiumone-campaigns)
+	- [b. Track 3rd party campaigns](#b-track-3rd-party-campaigns)
+
 #1. System Requirements
 Downloading LibR1Connect.a allows you to begin the integration process of adding R1 Connect services to your app. It supports all mobile and tablet devices running iOS 5.0 with Xcode 4.5 and above. The file itself contains the library and headers of the R1 Connect SDK for iOS. The library supports the following architectures:
 
@@ -132,7 +150,7 @@ By default, this is 30 seconds.
 	[R1Emitter sharedInstance].sessionTimeout = 15;
 
 
-#3. Activate Analytics Module
+#3. Analytics Activation
 ## a. Standard Events
 
 
@@ -319,7 +337,7 @@ To include tracking of custom events for the mobile app, the following callbacks
 
 
 
-#4. Activate Push Notification Module
+#4. Push Notification Activation
 
 ##a. initialize module
 
@@ -418,7 +436,7 @@ or
 	
 	NSArray *currentTags = [R1Push sharedInstance].tags.tags;
 
-#5. Activate Attribution Tracking Module
+#5. Attribution Tracking Activation
 ##a. Track RadiumOne campaigns
 TBD
 ##b. Track 3rd party campaigns
