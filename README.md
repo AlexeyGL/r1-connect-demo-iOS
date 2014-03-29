@@ -1,34 +1,34 @@
 #Table of Content
 - [1. System Requirements](#1-system-requirements)
 - [2. SDK initialization](#2-sdk-initialization)
-	- [a. Import files](#a-import-files)
-	- [b. Link the static library](#b-link-the-static-library)
-	- [c. initialize the SDK](#c-initialize-the-sdk)
-	- [d. advanced settings](#d-advanced-settings)
+	- [a. Import Files](#a-import-files)
+	- [b. Link the Static Library](#b-link-the-static-library)
+	- [c. Initialize the SDK](#c-initialize-the-sdk)
+	- [d. Advanced Settings](#d-advanced-settings)
 - [3. Analytics Activation](#3-analytics-activation)
 	- [a. Standard Events](#a-standard-events)
-	- [b. custom events](#b-custom-events)
+	- [b. Custom Events](#b-custom-events)
 - [4. Push Notification Activation](#4-push-notification-activation)
 	- [a. initialize module](#a-initialize-module)
 	- [b. setup Apple Push Notification Services](#b-setup-apple-push-notification-services)
-	- [c. Segment your audience](#c-segment-your-audience)
+	- [c. Segment your Audience](#c-segment-your-audience)
 - [5. Attribution Tracking Activation](#5-attribution-tracking-activation)
-	- [a. Track RadiumOne campaigns](#a-track-radiumone-campaigns)
-	- [b. Track 3rd party campaigns](#b-track-3rd-party-campaigns)
+	- [a. Track RadiumOne Campaigns](#a-track-radiumone-campaigns)
+	- [b. Track 3rd party Campaigns](#b-track-3rd-party-campaigns)
 
 #1. System Requirements
-Downloading LibR1Connect.a allows you to begin the integration process of adding R1 Connect services to your app. It supports all mobile and tablet devices running iOS 5.0 with Xcode 4.5 and above. The file itself contains the library and headers of the R1 Connect SDK for iOS. The library supports the following architectures:
+The R1 Connect SDK supports all mobile and tablet devices running iOS 5.0 with Xcode 4.5 and above. The file itself contains the library and headers of the R1 Connect SDK for iOS. The library supports the following architectures:
 
-*   arm7
+*       arm7
 *	arm7s
 *	arm64
 *	i386
 *	x86_64
 
 
-#2. SDK initialization
+#2. SDK Initialization
 
-## a. Import files
+## a. Import Files
 1.	Download the r1connect lib files:
            git clone git@github.com:radiumone/r1-connect-demo-iOS.git
 2.	Open up your iOS project in xCode.
@@ -37,16 +37,17 @@ Downloading LibR1Connect.a allows you to begin the integration process of adding
 5.	When the dialog box appears, check the Copy Items into destination group’s folder checkbox.
  
 
-![Files in xCode project](https://raw.github.com/radiumone/r1-connect-demo-iOS/readme_images/ReadmeImages/library_files.png)
 
-## b. Link the static library
+<img src="https://raw.github.com/radiumone/r1-connect-demo-iOS/readme_images/ReadmeImages/library_files.png"  width="440" />
+
+## b. Link the Static Library
 Check that the LibR1Connect.a file in the “Link Binary With Libraries” section is in the Build Phases tab for your target. If it’s absent, please add it.
 
-![Linked binaries](https://raw.github.com/radiumone/r1-connect-demo-iOS/readme_images/ReadmeImages/link_with_binary.png)
+ <img src="https://raw.github.com/radiumone/r1-connect-demo-iOS/readme_images/ReadmeImages/link_with_binary.png"  width="440" />
  
 Check Background modes switch is turned on in Capabilities tab for your target. If it’s turned off, please turn on.
  
-## c. initialize the SDK
+## c. Initialize the SDK
 You will need to initialize the R1 Connect Library in your App Delegate.
 ####Import the required header files
 At the top of your application delegate include any required headers:
@@ -75,7 +76,7 @@ At the top of your application delegate include any required headers:
 }
 ```
 
-## d. advanced settings
+## d. Advanced Settings
 The following is a list of configuration parameters for the R1 Connect SDK, most of these contain values that are sent to the tracking server to help identify your app on our platform and to provide analytics on sessions and location.
 
 ####Configuration Parameters
@@ -318,7 +319,7 @@ Basically, a page view, it provides info about that screen
 
 
 
-##b. custom events
+##b. Custom Events
 
 
 
@@ -339,7 +340,7 @@ To include tracking of custom events for the mobile app, the following callbacks
 
 #4. Push Notification Activation
 
-##a. initialize module
+##a. Initialize Module
 
 
 ####Setup your App Delegate
@@ -398,10 +399,57 @@ Push is disabled by default. You can enable it in the *application:didFinishLaun
 CAUTION: If you enabled it in the *application:didFinishLaunchingWithOptions* method, the Push Notification AlertView will be showed at first application start.
 
 
-##b. setup Apple Push Notification Services
-    TBD
+##b. Setup Apple Push Notification Services
+
+####Prerequisites for Apple Push Notification Services Setup
+######The Importance of Setting your App as in “Production” or in “Development”
+When creating or editing an app on RadiumOne Connect you can set the status of the app to either “Production” or “Development”. “Production” status for an app is considered to be a live app that is in the hands of real users and will have notifications and other data running on live servers. A “Development” status for an app is one that you are still performing testing on and will not be viewed by any real-life audiences because it will stay on test servers.
+
+In the context of push notifications, it is important to know this difference because Apple will treat these two servers separately. Also device tokens for “Development” will not work on “Production” and vice versa. We recommend a Development app version and Production app version for your app on RadiumOne Connect to keep Push SSL certificates separate for each. You can also continue testing and experimenting on one app without worrying about it affecting your live app audience in any way.
+######iOS Developer Program Enrollment
+This doc assumes that you are enrolled in the iOS Developer Program. If you are not, please enroll [here](https://developer.apple.com/programs/ios/). Being in the Apple Developer Program is a required component to have your iOS app communicate with the RadiumOne Connect service for push notifications and is necessary for the next step of setting up your app with the Apple Push Notification Service (APNs). It is also essential that you have “Team Agent” role access in the iOS Developer Program to complete this process.
+
+####Configuring your App for Apple Push Notifications
+######Apple Developer Members Center
+Make sure you are logged into the [Apple Developer Members Center](https://daw.apple.com/cgi-bin/WebObjects/DSAuthWeb.woa/wa/login?&appIdKey=891bd3417a7776362562d2197f89480a8547b108fd934911bcbea0110d07f757&path=%2F%2Fmembercenter%2Findex.action). Once you are logged in you can locate your application in the “Identifiers” folder list.
+
+![Files in xCode project](http://mcpdemo.herokuapp.com/static/img/help/ios_integration/image001.jpg)
+
+######Registered App ID
+If you have not registered an App ID yet it is important that you do so now. You will need to click the “+” symbol, fill out the form, and check the “Push Notifications” checkbox. Please keep in mind it is possible to edit these choices after the App ID is registered.
+
+
+![Files in xCode project](http://mcpdemo.herokuapp.com/static/img/help/ios_integration/image002.jpg)
+![Files in xCode project](http://mcpdemo.herokuapp.com/static/img/help/ios_integration/image003.jpg)
+
+You can expand the application and when doing so you will see two settings for push notifications. They will have either yellow or green status icons like here:
+
+![Files in xCode project](http://mcpdemo.herokuapp.com/static/img/help/ios_integration/image004.jpg)
+
+You will need to click Edit to continue. If the Edit button is not visible it is because you do not have “Team Agent” role access. This role is necessary for getting an SSL certificate.
+
+######Creating an SSL Certificate
+To enable the Development or Production Push SSL Certificate please click Edit. (It is important to note that each certificate is limited to a single app, identified by its bundle ID and limited to one of two environments, either Development or Production. Read more info [here](https://developer.apple.com/library/ios/documentation/NetworkingInternet/Conceptual/RemoteNotificationsPG/Chapters/ProvisioningDevelopment.html#//apple_ref/doc/uid/TP40008194-CH104-SW1).)
+
+![Files in xCode project](http://mcpdemo.herokuapp.com/static/img/help/ios_integration/image005.jpg)
+
+
+You will see a Create Certificate button, after clicking it you will see the “Add iOS Certificate Assistant”. Please follow the instructions presented in the assistant which includes launching the “Keychain Access” application, generating a “Certificate Signing Request (CSR)”, generating an SSL Certificate, etc.
+
+If you follow the assistant correctly, after downloading and opening the SSL Certificate you should have it added under “My Certificates” or “Certificates” in your “Keychain Access” application. Also when you are returned to the Configure App ID page the certificate should be badged with a green circle and the label “Enabled”.
+
+![Files in xCode project](http://mcpdemo.herokuapp.com/static/img/help/ios_integration/image006.jpg)
+
+######Exporting the SSL Certificate
+If not already in the “Keychain Access” app that contains your certificate, please open it and select the certificate that you just added. Once you select the certificate go to File > Export Items and export it as a Personal Information Exchange (.p12) file. When saving the file be sure to use the Personal Information Exchange (.p12) format.
+
+![Files in xCode project](http://mcpdemo.herokuapp.com/static/img/help/ios_integration/image007.jpg)
     
-##c. Segment your audience    
+######Emailing your SSL certificate
+After downloading your 2 certificates (one for production, one for development), please send them to your RadiumOne account manager (with certificate passwords if you chose to add any).
+
+
+##c. Segment your Audience    
 
 You can specify Tags for *R1 Connect SDK* to send *Push Notifications* for certain groups of users.
 
@@ -437,7 +485,15 @@ or
 	NSArray *currentTags = [R1Push sharedInstance].tags.tags;
 
 #5. Attribution Tracking Activation
-##a. Track RadiumOne campaigns
-TBD
-##b. Track 3rd party campaigns
-TBD
+##a. Track RadiumOne Campaigns
+Please contact your Account Manager to setup R1 ad campaign as well as tracking campaigns.  If you don't have one, please contact us  [here](http://radiumone.com/contact-mobile-team.html) and one of our Account Managers will assist you.
+
+Once your Account Manager has set up tracking, you will start receiving attribution tracking report automatically!
+
+##b. Track 3rd party Campaigns
+1. Please contact your Account Manager to setup tracking URLs for your 3rd party campaigns.  If you don't have one, please contact us [here](http://radiumone.com/contact-mobile-team.html) and one of our Account Managers will assist you.
+2. Send the list of all your media suppliers (anyone you run a mobile advertising campaign with).
+3. For each media supplier, your account manager will send you 2 tracking URLs (one impression tracking URL, 1 click tracking URL).
+4. Send each pair of URLs to the relevant Media Supplier so they can set these tracking URLs on the creatives
+5. You're all set and will start having access to Attribution Tracking Reports
+
