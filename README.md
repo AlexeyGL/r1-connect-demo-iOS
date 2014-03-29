@@ -223,6 +223,22 @@ Allows access to Twitter services
                                       		   permissions:permissions
                                   			     otherInfo:@{"custom_key":"value"}];
 
+**User Info**
+
+This event enables you to send user profiles to the backend.
+
+	[[R1Emitter sharedInstance] emitUserInfo:[R1Emitter sha1:@"userId"]
+                          userName:@"userName"
+                             email:@"user@email.com"
+                         firstName:@"first name"
+                          lastName:@"last name"
+                     streetAddress:@"streetAddress"
+                             phone:@"phone"
+                              city:@"city"
+                             state:@"state"
+                               zip:@"zip"
+                         otherInfo:@{"custom_key":"value"}];
+
 **Upgrade**
 
 Tracks an application version upgrade
