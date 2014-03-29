@@ -8,6 +8,7 @@
 - [3. Analytics Activation](#3-analytics-activation)
 	- [a. Standard Events](#a-standard-events)
 	- [b. Custom Events](#b-custom-events)
+	- [c. Best Practices](#c-best-practices)
 - [4. Push Notification Activation](#4-push-notification-activation)
 	- [a. initialize module](#a-initialize-module)
 	- [b. setup Apple Push Notification Services](#b-setup-apple-push-notification-services)
@@ -335,8 +336,37 @@ To include tracking of custom events for the mobile app, the following callbacks
 
 
 
+##c. Best Practices
+####Event Naming Convention
+One common mistake is to parametrize event names (with user data for example). Event names should be hard-coded values that you use to segement data on a specific category of event. 
 
+Example: "ProfileViewing"
 
+Avoid: "Profile Viewing - Lady Gaga's profile"
+
+As you may have thousands of user profiles in your database, it is preferable to keep the event name high level ("ProfileViewing") so you can run interesting anaytics on it. For example, it will be much easier to answer this question: "how many profiles does a user visit every day on average?". 
+
+####Parameter Variance
+
+Another common mistake is to add parameters to the event that have too many possible values. To follow up on the previous example, one may decide to add the number of profile followers as an event parameter:
+
+	[[R1Emitter sharedInstance] emitEvent:@"ProfileViewing"
+			  			   withParameters:@{"profileFollowers":profileFollowers}];
+			  			   
+Again, the problem here is that each profile may have any number of followers. This will result in having your data much too fragmented to extract any valuable information.
+
+Instead, a good strategy would be to define relevant buckets to replace high variance parameters. For example, in this case, it might be more relevant to separate traffic on the profiles with a lot of followers from traffic on frofiles with very few followers. You could defined 3 categories: 
+
+- "VERY_INFLUENTIAL" for profiles > 100,000 
+- "INFLUENTIAL" for profile > 10,000 and <= 100,000
+- "NON_INFLUENTIAL" for profile <= 10,000
+
+Then a proper event would be 
+
+	[[R1Emitter sharedInstance] emitEvent:@"ProfileViewing"
+			  			   withParameters:@{"profileFollowersBucket":@"VERY_INFLUENTIAL"}];
+			  			   
+This will enable you to create much more insightful reports.
 
 #4. Push Notification Activation
 
