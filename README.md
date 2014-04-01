@@ -69,11 +69,11 @@ At the top of your application delegate include any required headers:
     
     // Initialize Anlaytics      
     sdk.applicationId = @"[YOUR APPLICATION ID]";  //Ask your RadiumOne contact for an app id
-    sdk.applicationUserId = @"[(Optional) Application User Id]";     
-    sdk.location = ...                   
+    sdk.location = ...  //Optional
+    
     // Start SDK     
    [sdk start];      
-    return YES 
+    return YES; 
 }
 ```
 
