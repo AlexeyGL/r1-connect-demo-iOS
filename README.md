@@ -49,8 +49,8 @@ Go to "Build Phases" and make sure LibR1Connect.a file is set in the “Link Bin
 
 Make sure you also add:
 
-* AdSupport.framework
-* CoreTelephony.framework
+*       AdSupport.framework
+*       CoreTelephony.framework
 
  <img src="https://raw.github.com/radiumone/r1-connect-demo-iOS/readme_images/ReadmeImages/link_with_binary.png"  width="440" />
 
@@ -161,8 +161,9 @@ By default, this is 30 seconds.
 	[R1Emitter sharedInstance].sessionTimeout = 15;
 
 
-#3. Analytics Activation
-## a. Automatic Events
+#3. Feature Activation (Anlaytics, Push, Attribution Tracking)
+##3. Analytics Activation
+### i. Automatic Events
 
 
 The R1 Connect SDK will automatically capture some generic events, but in order to get the most meaningful data on how users interact with your app the SDK. These events are triggered when the state of the application is changed and, therefore, they do not require any additional code to be written in the app in order to work out of the box:
@@ -181,7 +182,7 @@ The R1 Connect SDK will automatically capture some generic events, but in order 
 
 **Session End** - As the name implies the Session End event is used to end a session and passes with it a Session Length attribute that calculates the session length in seconds.
 
-## b. Automatic Events
+### ii. Standard Events
 
 Standard Events give you an easy way to cover all the main user flows (login, register, share, purchase...) in a standardized format for optimized reporting on the portal. They provide some great foundation for your analytics strategy. Once you set them up in your code, they unlock great insights, especially on user lifetime value.
 
@@ -335,7 +336,7 @@ Basically, a page view, it provides info about that screen
 
 
 
-##c. Custom Events
+###iii. Custom Events
 
 
 
@@ -351,7 +352,7 @@ To include tracking of custom events for the mobile app, the following callbacks
 
 
 
-##d. Best Practices
+###iv. Best Practices
 ####Event Naming Convention
 One common mistake is to parametrize event names (with user data for example). Event names should be hard-coded values that you use to segement data on a specific category of event. 
 
@@ -383,9 +384,9 @@ Then a proper event would be
 			  			   
 This will enable you to create much more insightful reports.
 
-#4. Push Notification Activation
+##b. Push Notification Activation
 
-##a. Initialize Module
+###i. Initialize Module
 
 
 ####Setup your App Delegate
@@ -450,7 +451,7 @@ Push is disabled by default. You can enable it in the *application:didFinishLaun
 NOTE: If you enabled it in the *application:didFinishLaunchingWithOptions* method, the Push Notification AlertView will be showed at first application start.
 
 
-##b. Setup Apple Push Notification Services
+###ii. Setup Apple Push Notification Services
 
 ####Prerequisites for Apple Push Notification Services Setup
 ######The Importance of Setting your App as in “Production” or in “Development”
@@ -500,7 +501,7 @@ If not already in the “Keychain Access” app that contains your certificate, 
 After downloading your 2 certificates (one for production, one for development), please send them to your RadiumOne account manager (with certificate passwords if you chose to add any).
 
 
-##c. Segment your Audience    
+###iii. Segment your Audience    
 
 You can specify Tags for *R1 Connect SDK* to send *Push Notifications* for certain groups of users.
 
@@ -535,13 +536,13 @@ or
 	
 	NSArray *currentTags = [R1Push sharedInstance].tags.tags;
 
-#5. Attribution Tracking Activation
-##a. Track RadiumOne Campaigns
+##c. Attribution Tracking Activation
+###ii. Track RadiumOne Campaigns
 Please contact your Account Manager to setup R1 ad campaign as well as tracking campaigns.  If you don't have one, please contact us  [here](http://radiumone.com/contact-mobile-team.html) and one of our Account Managers will assist you.
 
 Once your Account Manager has set up tracking, you will start receiving attribution tracking report automatically!
 
-##b. Track 3rd party Campaigns
+###iii. Track 3rd party Campaigns
 1. Please contact your Account Manager to setup tracking URLs for your 3rd party campaigns.  If you don't have one, please contact us [here](http://radiumone.com/contact-mobile-team.html) and one of our Account Managers will assist you.
 2. Send the list of all your media suppliers (anyone you run a mobile advertising campaign with).
 3. For each media supplier, your account manager will send you 2 tracking URLs (one impression tracking URL, 1 click tracking URL).
