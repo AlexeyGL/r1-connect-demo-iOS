@@ -161,8 +161,8 @@ By default, this is 30 seconds.
 	[R1Emitter sharedInstance].sessionTimeout = 15;
 
 
-#3. Feature Activation (Anlaytics, Push, Attribution Tracking)
-##3. Analytics Activation
+#3. Feature Activation (Anlaytics, Push, Attribution)
+##a. Analytics Activation
 ### i. Automatic Events
 
 
