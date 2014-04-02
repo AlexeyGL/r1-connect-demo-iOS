@@ -18,7 +18,9 @@
 	- [b. Track 3rd party Campaigns](#b-track-3rd-party-campaigns)
 
 #1. System Requirements
-The R1 Connect SDK supports all mobile and tablet devices running iOS 5.0 with Xcode 4.5 and above. The file itself contains the library and headers of the R1 Connect SDK for iOS. The library supports the following architectures:
+The R1 Connect SDK supports all mobile and tablet devices running iOS 5.0 with Xcode 4.5 and above. The downloadable directory (see below "[a. Import Files](#a-import-files)") contains the library and headers of the R1 Connect SDK for iOS. 
+
+The library supports the following architectures:
 
 *       arm7
 *	arm7s
@@ -26,6 +28,7 @@ The R1 Connect SDK supports all mobile and tablet devices running iOS 5.0 with X
 *	i386
 *	x86_64
 
+It supports iOS 5 and up.
 
 #2. SDK Initialization
 
@@ -42,9 +45,15 @@ The R1 Connect SDK supports all mobile and tablet devices running iOS 5.0 with X
 <img src="https://raw.github.com/radiumone/r1-connect-demo-iOS/readme_images/ReadmeImages/library_files.png"  width="440" />
 
 ## b. Link the Static Library
-Check that the LibR1Connect.a file in the “Link Binary With Libraries” section is in the Build Phases tab for your target. If it’s absent, please add it.
+Go to "Build Phases" and make sure LibR1Connect.a file is set in the “Link Binary With Libraries” section. If it’s absent, please add it.
+
+Make sure you also add:
+
+* AdSupport.framework
+* CoreTelephony.framework
 
  <img src="https://raw.github.com/radiumone/r1-connect-demo-iOS/readme_images/ReadmeImages/link_with_binary.png"  width="440" />
+
  
 Check Background modes switch is turned on in Capabilities tab for your target. If it’s turned off, please turn on.
  
@@ -56,6 +65,7 @@ At the top of your application delegate include any required headers:
 
 ```objc
 #import "R1SDK.h"
+#import "R1Emitter.h"
 ```
 
 
@@ -69,7 +79,6 @@ At the top of your application delegate include any required headers:
     
     // Initialize Anlaytics      
     sdk.applicationId = @"[YOUR APPLICATION ID]";  //Ask your RadiumOne contact for an app id
-    sdk.location = ...  //Optional
     
     // Start SDK     
    [sdk start];      
@@ -94,7 +103,7 @@ Optional current user identifier.
 The current user location coordinates. Use it only if your application already uses location services.
 
 
-	[R1SDK sharedInstance].location = …;
+	[R1SDK sharedInstance].location = [locations lastObject];
 
 
 ***locationService***
@@ -153,14 +162,10 @@ By default, this is 30 seconds.
 
 
 #3. Analytics Activation
-## a. Standard Events
+## a. Automatic Events
 
 
-The R1 Connect SDK will automatically capture some generic events, but in order to get the most meaningful data on how users interact with your app the SDK also offers pre-built user-defined events for popular user actions as well as the ability to create your own custom events.
-
-####State Events
-
-Some events are emitted automatically when the state of the application is changed by the OS and, therefore, they do not require any additional code to be written in the app in order to work out of the box:
+The R1 Connect SDK will automatically capture some generic events, but in order to get the most meaningful data on how users interact with your app the SDK. These events are triggered when the state of the application is changed and, therefore, they do not require any additional code to be written in the app in order to work out of the box:
 
 **Launch** - emitted when the app starts
 
@@ -172,19 +177,15 @@ Some events are emitted automatically when the state of the application is chang
 
 **Resume** - emitted when the app returns from the background state
 
-####Pre-Defined Events
-
-Pre-Defined Events are also helpful in measuring certain metrics within the apps and do not require further developer input to function. These particular events below are used to help measure app open events and track Sessions.
-
 **Application Opened** - This event is very useful for push notifications and can measure when your app is opened after a message is sent.
 
 **Session End** - As the name implies the Session End event is used to end a session and passes with it a Session Length attribute that calculates the session length in seconds.
 
-####User-Defined Events
+## b. Automatic Events
 
-User-Defined Events are not sent automatically so it is up to you if you want to use them or not. They can provide some great insights on popular user actions if you decide to track them.  In order to set this up the application code needs to include the emitter callbacks in order to emit these events.
+Standard Events give you an easy way to cover all the main user flows (login, register, share, purchase...) in a standardized format for optimized reporting on the portal. They provide some great foundation for your analytics strategy. Once you set them up in your code, they unlock great insights, especially on user lifetime value.
 
-*Note: The last argument in all of the following emitter callbacks, otherInfo, is a dictionary of “key”,”value” pairs or nil*
+*Note: The last argument in all of the following emitter callbacks, otherInfo, is a dictionary of “key”,”value” pairs or nil, which enables you to customize these events as much as you want.*
 
 **Login**
 
@@ -262,8 +263,6 @@ Basically, a page view, it provides info about that screen
                                   					   documentPath:@"path"
                                      					  otherInfo:@{"custom_key":"value"}];
 
-####E-Commerce Events
-
 **Transaction**
 
 	[[R1Emitter sharedInstance] emitTransactionWithID:@"transaction_id"
@@ -336,7 +335,7 @@ Basically, a page view, it provides info about that screen
 
 
 
-##b. Custom Events
+##c. Custom Events
 
 
 
@@ -352,7 +351,7 @@ To include tracking of custom events for the mobile app, the following callbacks
 
 
 
-##c. Best Practices
+##d. Best Practices
 ####Event Naming Convention
 One common mistake is to parametrize event names (with user data for example). Event names should be hard-coded values that you use to segement data on a specific category of event. 
 
@@ -371,7 +370,7 @@ Another common mistake is to add parameters to the event that have too many poss
 			  			   
 Again, the problem here is that each profile may have any number of followers. This will result in having your data much too fragmented to extract any valuable information.
 
-Instead, a good strategy would be to define relevant buckets to replace high variance parameters. For example, in this case, it might be more relevant to separate traffic on the profiles with a lot of followers from traffic on frofiles with very few followers. You could defined 3 categories: 
+Instead, a good strategy would be to define relevant buckets to replace high variance parameters. For example, in this case, it might be more relevant to separate traffic on the profiles with a lot of followers from traffic on frofiles with very few followers. You could define 3 categories: 
 
 - "VERY_INFLUENTIAL" for profiles > 100,000 
 - "INFLUENTIAL" for profile > 10,000 and <= 100,000
@@ -391,18 +390,24 @@ This will enable you to create much more insightful reports.
 
 ####Setup your App Delegate
 
+
+```objc
+#import "R1SDK.h"
+#import "R1Emitter.h"
+#import "R1Push.h"
+```
+
+
 ```objc
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     R1SDK *sdk = [R1SDK sharedInstance];
     
     // Initialize SDK
-    sdk.applicationId = @"[Application ID]"; 
-    sdk.applicationUserId = @"[(Optional) Application User Id]";
-    
+    sdk.applicationId = @"[Application ID]";  //Ask your RadiumOne contact for an app id
     
     // Initialize Push Notification
-    sdk.clientKey = @"[Your Client Key]";
+    sdk.clientKey = @"[Your Client Key]";  //Ask your RadiumOne contact for a client key
     [[R1Push sharedInstance] handleNotification:[launchOptions valueForKey:UIApplicationLaunchOptionsRemoteNotificationKey]
                                  applicationState: application.applicationState];
     [[R1Push sharedInstance] registerForRemoteNotificationTypes:(UIRemoteNotificationTypeBadge |
@@ -411,13 +416,13 @@ This will enable you to create much more insightful reports.
     
     // Start SDK
     [sdk start];
-    
-    return YES
+    return YES;
 }
 ```
 
 
 ####Register for Remote Notifications
+
 
 
 ```objc
@@ -442,7 +447,7 @@ Push is disabled by default. You can enable it in the *application:didFinishLaun
 ```
 
 
-CAUTION: If you enabled it in the *application:didFinishLaunchingWithOptions* method, the Push Notification AlertView will be showed at first application start.
+NOTE: If you enabled it in the *application:didFinishLaunchingWithOptions* method, the Push Notification AlertView will be showed at first application start.
 
 
 ##b. Setup Apple Push Notification Services
