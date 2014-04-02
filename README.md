@@ -18,7 +18,7 @@
 	- [c. Attribution Tracking Activation](#user-content-c-attribution-tracking-activation)
 		- [i. Track RadiumOne Campaigns](#user-content-i-track-radiumone-campaigns)
 		- [ii. Track 3rd party Campaigns](#user-content-ii-track-3rd-party-campaigns)
-		-
+		
 
 #1. System Requirements
 The R1 Connect SDK supports all mobile and tablet devices running iOS 5.0 with Xcode 4.5 and above. The downloadable directory (see below "[a. Import Files](#a-import-files)") contains the library and headers of the R1 Connect SDK for iOS. 
