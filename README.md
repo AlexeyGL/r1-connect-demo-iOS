@@ -1,21 +1,24 @@
 #Table of Content
-- [1. System Requirements](#1-system-requirements)
-- [2. SDK initialization](#2-sdk-initialization)
-	- [a. Import Files](#a-import-files)
-	- [b. Link the Static Library](#b-link-the-static-library)
-	- [c. Initialize the SDK](#c-initialize-the-sdk)
-	- [d. Advanced Settings](#d-advanced-settings)
-- [3. Analytics Activation](#3-analytics-activation)
-	- [a. Standard Events](#a-standard-events)
-	- [b. Custom Events](#b-custom-events)
-	- [c. Best Practices](#c-best-practices)
-- [4. Push Notification Activation](#4-push-notification-activation)
-	- [a. initialize module](#a-initialize-module)
-	- [b. setup Apple Push Notification Services](#b-setup-apple-push-notification-services)
-	- [c. Segment your Audience](#c-segment-your-audience)
-- [5. Attribution Tracking Activation](#5-attribution-tracking-activation)
-	- [a. Track RadiumOne Campaigns](#a-track-radiumone-campaigns)
-	- [b. Track 3rd party Campaigns](#b-track-3rd-party-campaigns)
+- [1. System Requirements](#user-content-1-system-requirements)
+- [2. SDK Initialization](#user-content-2-sdk-initialization)
+	- [a. Import Files](#user-content-a-import-files)
+	- [b. Link the Static Library](#user-content-b-link-the-static-library)
+	- [c. Initialize the SDK](#user-content-c-initialize-the-sdk)
+	- [d. Advanced Settings](#user-content-d-advanced-settings)
+- [3. Feature Activation](#user-content-3-feature-activation)
+	- [a. Analytics Activation](#user-content-a-analytics-activation)
+		- [i. Automatic Events](#user-content-i-automatic-events)
+		- [ii. Standard Events](#user-content-ii-standard-events)
+		- [iii. Custom Events](#user-content-iii-custom-events)
+		- [iv. Best Practices](#user-content-iv-best-practices)
+	- [b. Push Notification Activation](#user-content-b-push-notification-activation)
+		- [i. Initialization](#user-content-i-initialization)
+		- [ii. Setup Apple Push Notification Services](#user-content-ii-setup-apple-push-notification-services)
+		- [iii. Segment your Audience](#user-content-iii-segment-your-audience)
+	- [c. Attribution Tracking Activation](#user-content-c-attribution-tracking-activation)
+		- [i. Track RadiumOne Campaigns](#user-content-i-track-radiumone-campaigns)
+		- [ii. Track 3rd party Campaigns](#user-content-ii-track-3rd-party-campaigns)
+		-
 
 #1. System Requirements
 The R1 Connect SDK supports all mobile and tablet devices running iOS 5.0 with Xcode 4.5 and above. The downloadable directory (see below "[a. Import Files](#a-import-files)") contains the library and headers of the R1 Connect SDK for iOS. 
@@ -161,7 +164,7 @@ By default, this is 30 seconds.
 	[R1Emitter sharedInstance].sessionTimeout = 15;
 
 
-#3. Feature Activation (Anlaytics, Push, Attribution)
+#3. Feature Activation
 ##a. Analytics Activation
 ### i. Automatic Events
 
@@ -386,7 +389,7 @@ This will enable you to create much more insightful reports.
 
 ##b. Push Notification Activation
 
-###i. Initialize Module
+###i. Initialization
 
 
 ####Setup your App Delegate
@@ -537,12 +540,12 @@ or
 	NSArray *currentTags = [R1Push sharedInstance].tags.tags;
 
 ##c. Attribution Tracking Activation
-###ii. Track RadiumOne Campaigns
+###i. Track RadiumOne Campaigns
 Please contact your Account Manager to setup R1 ad campaign as well as tracking campaigns.  If you don't have one, please contact us  [here](http://radiumone.com/contact-mobile-team.html) and one of our Account Managers will assist you.
 
 Once your Account Manager has set up tracking, you will start receiving attribution tracking report automatically!
 
-###iii. Track 3rd party Campaigns
+###ii. Track 3rd party Campaigns
 1. Please contact your Account Manager to setup tracking URLs for your 3rd party campaigns.  If you don't have one, please contact us [here](http://radiumone.com/contact-mobile-team.html) and one of our Account Managers will assist you.
 2. Send the list of all your media suppliers (anyone you run a mobile advertising campaign with).
 3. For each media supplier, your account manager will send you 2 tracking URLs (one impression tracking URL, 1 click tracking URL).
