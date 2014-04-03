@@ -52,8 +52,12 @@ Go to "Build Phases" and make sure LibR1Connect.a file is set in the “Link Bin
 
 Make sure you also add:
 
-*       AdSupport.framework
-*       CoreTelephony.framework
++	AdSupport.framework
++	CoreTelephony.framework
++	SystemConfiguration.framework
++	libsqlite3.dylib
++	CoreLocation.framework
+
 
  <img src="https://raw.github.com/radiumone/r1-connect-demo-iOS/readme_images/ReadmeImages/link_with_binary.png"  width="440" />
 
@@ -97,34 +101,38 @@ The following is a list of configuration parameters for the R1 Connect SDK, most
 ***applicationUserId***
 
 Optional current user identifier.
-
-	[R1SDK sharedInstance].applicationUserId = @"12345";
+```objc
+[R1SDK sharedInstance].applicationUserId = @"12345";
+```
 
 ***location***
 
-
 The current user location coordinates. Use it only if your application already uses location services.
 
-
-	[R1SDK sharedInstance].location = [locations lastObject];
-
+```objc
+[R1SDK sharedInstance].location = [locations lastObject];
+```
 
 ***locationService***
 
-
 If your application did not use location information before this SDK installation, you can use locationService in this SDK to enable or disable it:
 
-	[R1SDK sharedInstance].locationService.enabled = YES;
+```objc
+[R1SDK sharedInstance].locationService.enabled = YES;
+```
 
 When enabled, such as in the example above, location information will be sent automatically. However, locationService doesn’t fetch the location constantly. For instance, when the location is received the SDK will turn off the location in CLLocationManager and wait 10 minutes (by default) before attempting to retrieve it again. You can change this value:
-
-	[R1SDK sharedInstance].locationService.autoupdateTimeout = 1200; // 20 minutes
+```objc
+[R1SDK sharedInstance].locationService.autoupdateTimeout = 1200; // 20 minutes
+```
 
 ***appName***
 
 The application name associated with emitter. By default, this property is populated with the `CFBundleName` string from the application bundle. If you wish to override this property, you must do so before making any tracking calls.
 		
-	[R1Emitter sharedInstance].appName = @"Custom application name";
+```objc
+[R1Emitter sharedInstance].appName = @"Custom application name";
+```
 
 ***appId***
 
@@ -132,14 +140,17 @@ Default: nil
 
 The application identifier associated with this emitter.  If you wish to set this property, you must do so before making any tracking calls. Note: that this is not your app's bundle id, like e.g. com.example.appname.
 
-	[R1Emitter sharedInstance].appId = @"12345678";
+```objc
+[R1Emitter sharedInstance].appId = @"12345678";
+```
 
 ***appVersion***
 
 The application version associated with this emitter. By default, this property is populated with the `CFBundleShortVersionString` string from the application bundle. If you wish to override this property, you must do so before making any tracking calls.
 
-	[R1Emitter sharedInstance].appVersion = @"1.0.2";
-
+```objc
+[R1Emitter sharedInstance].appVersion = @"1.0.2";
+```
 
 ***sessionStart***
 
@@ -149,9 +160,11 @@ If true, indicates the start of a new session. Note that when a emitter is first
  By itself, setting this does not send any data. If this is true, when the next emitter call is made, a parameter will be added to the resulting emitter
  information indicating that it is the start of a session, and this flag will be cleared.
 
-	[R1Emitter sharedInstance].sessionStart = YES;
-	// Your code here
-	[R1Emitter sharedInstance].sessionStart = NO;
+```objc
+[R1Emitter sharedInstance].sessionStart = YES;
+// Your code here
+[R1Emitter sharedInstance].sessionStart = NO;
+```
 
 ***sessionTimeout***
 
@@ -161,8 +174,9 @@ To disable automatic session tracking, set this to a negative value. To indicate
  
 By default, this is 30 seconds.
 
-	[R1Emitter sharedInstance].sessionTimeout = 15;
-
+```objc
+[R1Emitter sharedInstance].sessionTimeout = 15;
+```
 
 #3. Feature Activation
 ##a. Analytics Activation
@@ -183,7 +197,10 @@ The R1 Connect SDK will automatically capture some generic events, but in order 
 
 **Application Opened** - This event is very useful for push notifications and can measure when your app is opened after a message is sent.
 
-**Session End** - As the name implies the Session End event is used to end a session and passes with it a Session Length attribute that calculates the session length in seconds.
+**Session Start** - As the name implies the Session Start event is used to start a new session.
+
+**Session End** - The Session End event is used to end a session and passes with it a Session Length attribute that calculates the session length in seconds.
+
 
 ### ii. Standard Events
 
@@ -195,148 +212,177 @@ Standard Events give you an easy way to cover all the main user flows (login, re
 
 Tracks a user login within the app
 
-	[[R1Emitter sharedInstance] emitLoginWithUserID:[R1Emitter sha1:@"userId"]
-                           				    userName:@"user_name"
-                          				   otherInfo:@{"custom_key":"value"}];
+```objc
+[[R1Emitter sharedInstance] emitLoginWithUserID:@"userId"
+                           	       userName:@"user_name"
+                         	      otherInfo:@{"custom_key":"value"}];
+```
 
 **Registration**
 
 Records a user registration within the app
 
-	[[R1Emitter sharedInstance] emitRegistrationWithUserID:[R1Emitter sha1:@"userId"]
+```objc
+[[R1Emitter sharedInstance] emitRegistrationWithUserID:@"userId"
                                               userName:@"userName"
-                                                  city:@"city"
+                                               country:@"country"
                                                  state:@"state"
+                                                  city:@"city"
                                              otherInfo:@{"custom_key":"value"}];
+```
+
 **Facebook connect**
 
 Allows access to Facebook services
 
-	NSArray *permissions = @[[R1EmitterSocialPermission socialPermissionWithName:@"photos" granted:YES]];
+```objc
+NSArray *permissions = @[[R1EmitterSocialPermission socialPermissionWithName:@"photos" granted:YES]];
 
-	[[R1Emitter sharedInstance] emitFBConnectWithPermissions:permissions
-                                  				  otherInfo:@{"custom_key":"value"}];
+[[R1Emitter sharedInstance] emitFBConnectWithPermissions:permissions
+                                  	       otherInfo:@{"custom_key":"value"}];
+```
 
 **Twitter connect**
 
 Allows access to Twitter services
 
-	NSArray *permissions = @[[R1EmitterSocialPermission socialPermissionWithName:@"photos" granted:YES]];
+```objc
+NSArray *permissions = @[[R1EmitterSocialPermission socialPermissionWithName:@"photos" granted:YES]];
 
-	[[R1Emitter sharedInstance] emitTConnectWithUserID:[R1Emitter sha1:@"12345"]
-                                       			  userName:@"user_name"
-                                      		   permissions:permissions
-                                  			     otherInfo:@{"custom_key":"value"}];
+[[R1Emitter sharedInstance] emitTConnectWithUserID:@"12345"
+                                          userName:@"user_name"
+                                       permissions:permissions
+                                  	 otherInfo:@{"custom_key":"value"}];
+```
 
 **User Info**
 
 This event enables you to send user profiles to the backend.
 
-	[[R1Emitter sharedInstance] emitUserInfo:[R1Emitter sha1:@"userId"]
-                          userName:@"userName"
-                             email:@"user@email.com"
-                         firstName:@"first name"
-                          lastName:@"last name"
-                     streetAddress:@"streetAddress"
-                             phone:@"phone"
-                              city:@"city"
-                             state:@"state"
-                               zip:@"zip"
-                         otherInfo:@{"custom_key":"value"}];
+```objc
+R1EmitterUserInfo *userInfo = [R1EmitterUserInfo userInfoWithUserID:@"userId"
+                           userName:@"userName"
+                              email:@"user@email.com"
+                          firstName:@"first name"
+                           lastName:@"last name"
+                      streetAddress:@"streetAddress"
+                              phone:@"phone"
+                               city:@"city"
+                              state:@"state"
+                                zip:@"zip"];
+
+[[R1Emitter sharedInstance] emitUserInfo:@"userId"
+                               otherInfo:@{"custom_key":"value"}];
+```
 
 **Upgrade**
 
 Tracks an application version upgrade
 
-	[[R1Emitter sharedInstance] emitUpgradeWithOtherInfo:@{"custom_key":"value"}];
+```objc
+[[R1Emitter sharedInstance] emitUpgradeWithOtherInfo:@{"custom_key":"value"}];
+```
 
 **Trial Upgrade**
 
 Tracks an application upgrade from a trial version to a full version
 
-	[[R1Emitter sharedInstance] emitTrialUpgradeWithOtherInfo:@{"custom_key":"value"}];
+```objc
+[[R1Emitter sharedInstance] emitTrialUpgradeWithOtherInfo:@{"custom_key":"value"}];
+```
 
 **Screen View**
 
 Basically, a page view, it provides info about that screen
 
-	[[R1Emitter sharedInstance] emitScreenViewWithDocumentTitle:@"title"
+```objc
+[[R1Emitter sharedInstance] emitScreenViewWithDocumentTitle:@"title"
                             					 contentDescription:@"description"
                            						documentLocationUrl:@"http://www.example.com/path"
                               					   documentHostName:@"example.com"
                                   					   documentPath:@"path"
                                      					  otherInfo:@{"custom_key":"value"}];
+```
 
 **Transaction**
 
-	[[R1Emitter sharedInstance] emitTransactionWithID:@"transaction_id"
-                                   				  storeID:@"store_id"]
-                                 				storeName:@"store_name"
-                                    			   cartID:@"cart_id"
-                                   				  orderID:@"order_id"
-                                 				totalSale:1.5
-                                  				 currency:@"USD"
-                             				shippingCosts:10.5
-                            			   transactionTax:12.0
-                                 				otherInfo:@{"custom_key":"value"}];
-
+```objc
+[[R1Emitter sharedInstance] emitTransactionWithID:@"transaction_id"
+                                  	  storeID:@"store_id"
+                                 	storeName:@"store_name"
+                                    	   cartID:@"cart_id"
+                                   	  orderID:@"order_id"
+                                 	totalSale:1.5
+                                  	 currency:@"USD"
+                             	    shippingCosts:10.5
+                            	   transactionTax:12.0
+                                 	otherInfo:@{"custom_key":"value"}];
+```
 
 **TransactionItem**
 
-	R1EmitterLineItem *lineItem = [R1EmitterLineItem itemWithID:@"product_id"
-                              								   name:@"product_name"
-                          								   quantity:5
-                     								  unitOfMeasure:@"unit"
-                          								   msrPrice:10
-                         								  pricePaid:10
-                          								   currency:@"USD"
-                      								   itemCategory:@"category"];
+```objc
+R1EmitterLineItem *lineItem = [R1EmitterLineItem itemWithID:@"product_id"
+                              			       name:@"product_name"
+                          			   quantity:5
+                     			      unitOfMeasure:@"unit"
+                          			   msrPrice:10
+                         			  pricePaid:10
+                          			   currency:@"USD"
+                      			       itemCategory:@"category"];
 
-	[[R1Emitter sharedInstance] emitTransactionItemWithTransactionID:@"transaction_id"
-                                                 				lineItem:lineItem
-                                                			   otherInfo:@{"custom_key":"value"}];
-
+[[R1Emitter sharedInstance] emitTransactionItemWithTransactionID:@"transaction_id"
+                                                 	lineItem:lineItem
+                                                       otherInfo:@{"custom_key":"value"}];
+```
 
 **Create Cart**
 
-    [[R1Emitter sharedInstance] emitCartCreateWithCartID:@"cart_id"
-                                    			   otherInfo:@{"custom_key":"value"}];
+```objc
+[[R1Emitter sharedInstance] emitCartCreateWithCartID:@"cart_id"
+                                	   otherInfo:@{"custom_key":"value"}];
+```
 
 **Delete Cart**
 
-	[[R1Emitter sharedInstance] emitCartDeleteWithCartID:@"cart_id"
-                                    			   otherInfo:@{"custom_key":"value"}];
+```objc
+[[R1Emitter sharedInstance] emitCartDeleteWithCartID:@"cart_id"
+                       			   otherInfo:@{"custom_key":"value"}];
+```
 
 **Add To Cart**
 
-	R1EmitterLineItem *lineItem = [R1EmitterLineItem itemWithID:@"product_id"
-                              								   name:@"product_name"
-                          								   quantity:5
-                     								  unitOfMeasure:@"unit"
-                          								   msrPrice:10
-                         								  pricePaid:10
-                          								   currency:@"USD"
-                      								   itemCategory:@"category"];
+```objc
+R1EmitterLineItem *lineItem = [R1EmitterLineItem itemWithID:@"product_id"
+                              			       name:@"product_name"
+                          			   quantity:5
+                     			      unitOfMeasure:@"unit"
+                          			   msrPrice:10
+                         			  pricePaid:10
+                          			   currency:@"USD"
+                      			       itemCategory:@"category"];
 
-	[[R1Emitter sharedInstance] emitAddToCartWithCartID:@"cart_id"
-        				                           lineItem:lineItem
-                                   				  otherInfo:@{"custom_key":"value"}];
+[[R1Emitter sharedInstance] emitAddToCartWithCartID:@"cart_id"
+        				   lineItem:lineItem
+                                 	  otherInfo:@{"custom_key":"value"}];
+```
 
 **Delete From Cart**
 
-	R1EmitterLineItem *lineItem = [R1EmitterLineItem itemWithID:@"product_id"
-                              								   name:@"product_name"
-                          								   quantity:5
-                     								  unitOfMeasure:@"unit"
-                          								   msrPrice:10
-                         								  pricePaid:10
-                          								   currency:@"USD"
-                      								   itemCategory:@"category"];
+```objc
+R1EmitterLineItem *lineItem = [R1EmitterLineItem itemWithID:@"product_id"
+                              			       name:@"product_name"
+                          			   quantity:5
+                     			      unitOfMeasure:@"unit"
+                          			   msrPrice:10
+                         			  pricePaid:10
+                          			   currency:@"USD"
+                      			       itemCategory:@"category"];
 
-	[[R1Emitter sharedInstance] emitDeleteFromCartWithCartID:@"cart_id"
-         				                                lineItem:lineItem
-                                        			   otherInfo:@{"custom_key":"value"}];
-
+[[R1Emitter sharedInstance] emitDeleteFromCartWithCartID:@"cart_id"
+        					lineItem:lineItem
+                                 	       otherInfo:@{"custom_key":"value"}];
+```
 
 
 ###iii. Custom Events
@@ -347,12 +393,14 @@ With custom events you have the ability to create and track specific events that
 
 To include tracking of custom events for the mobile app, the following callbacks need to be included in the application code:
 
-	// Emits a custom event without parameters
-	[[R1Emitter sharedInstance] emitEvent:@"Your custom event name"];
-	// Emits a custom event with parameters
-	[[R1Emitter sharedInstance] emitEvent:@"Your custom event name"
-			  			   withParameters:@{"key":"value"}];
+```objc
+// Emits a custom event without parameters
+[[R1Emitter sharedInstance] emitEvent:@"Your custom event name"];
 
+// Emits a custom event with parameters
+[[R1Emitter sharedInstance] emitEvent:@"Your custom event name"
+			  			   withParameters:@{"key":"value"}];
+```
 
 
 ###iv. Best Practices
@@ -369,8 +417,10 @@ As you may have thousands of user profiles in your database, it is preferable to
 
 Another common mistake is to add parameters to the event that have too many possible values. To follow up on the previous example, one may decide to add the number of profile followers as an event parameter:
 
-	[[R1Emitter sharedInstance] emitEvent:@"ProfileViewing"
-			  			   withParameters:@{"profileFollowers":profileFollowers}];
+```objc
+[[R1Emitter sharedInstance] emitEvent:@"ProfileViewing"
+			withParameters:@{"profileFollowers":profileFollowers}];
+```
 			  			   
 Again, the problem here is that each profile may have any number of followers. This will result in having your data much too fragmented to extract any valuable information.
 
@@ -382,8 +432,11 @@ Instead, a good strategy would be to define relevant buckets to replace high var
 
 Then a proper event would be 
 
-	[[R1Emitter sharedInstance] emitEvent:@"ProfileViewing"
-			  			   withParameters:@{"profileFollowersBucket":@"VERY_INFLUENTIAL"}];
+```objc
+[[R1Emitter sharedInstance] emitEvent:@"ProfileViewing"
+			withParameters:@{"profileFollowersBucket":@"VERY_INFLUENTIAL"}];
+```
+
 			  			   
 This will enable you to create much more insightful reports.
 
@@ -432,15 +485,15 @@ This will enable you to create much more insightful reports.
 ```objc
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken
 {
-    [[R1Push sharedInstance]registerDeviceToken:deviceToken];
+    [[R1Push sharedInstance] registerDeviceToken:deviceToken];
 }
 - (void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error
 {
-    [[R1Push sharedInstance]failToRegisterDeviceTokenWithError:error];
+    [[R1Push sharedInstance] failToRegisterDeviceTokenWithError:error];
 }
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo
 {
-    [[R1Push sharedInstance]handleNotification:userInfo applicationState:application.applicationState];
+    [[R1Push sharedInstance] handleNotification:userInfo applicationState:application.applicationState];
 }
 ```
  
@@ -514,30 +567,43 @@ The maximum length of a Tag is 128 characters.
 
 ***Add a new Tag***
 
-	[[R1Push sharedInstance].tags addTag:@"NEW TAG"];
-	
+```objc
+[[R1Push sharedInstance].tags addTag:@"NEW TAG"];
+```
+
 ***Add multiple Tags***
 	
-	[[R1Push sharedInstance].tags addTags:@[ @"NEW TAG 1", @"NEW TAG 2" ]];
-	
+```objc
+[[R1Push sharedInstance].tags addTags:@[ @"NEW TAG 1", @"NEW TAG 2" ]];
+```
+
 ***Remove existing Tag***
-	
-	[[R1Push sharedInstance].tags removeTag:@"EXIST TAG"];
-	
+
+```objc
+[[R1Push sharedInstance].tags removeTag:@"EXIST TAG"];
+```
+
 ***Remove multiple Tags***
 
-	[[R1Push sharedInstance].tags removeTags:@[ @"EXIST TAG 1", @"EXIST TAG 2" ]];
-	
+```objc
+[[R1Push sharedInstance].tags removeTags:@[ @"EXIST TAG 1", @"EXIST TAG 2" ]];
+```
+
 ***Replace all existing Tags***
 
-	[R1Push sharedInstance].tags.tags = @[ @"NEW TAG 1", @"NEW TAG 2" ];
+```objc
+[R1Push sharedInstance].tags.tags = @[ @"NEW TAG 1", @"NEW TAG 2" ];
+```
 or
+```objc
+[[R1Push sharedInstance].tags setTags:@[ @"NEW TAG 1", @"NEW TAG 2" ]];
+```
 
-	[[R1Push sharedInstance].tags setTags:@[ @"NEW TAG 1", @"NEW TAG 2" ]];
-	
 ***Get all Tags***
 	
-	NSArray *currentTags = [R1Push sharedInstance].tags.tags;
+```objc
+NSArray *currentTags = [R1Push sharedInstance].tags.tags;
+```
 
 ##c. Attribution Tracking Activation
 ###i. Track RadiumOne Campaigns
