@@ -215,7 +215,7 @@ Tracks a user login within the app
 ```objc
 [[R1Emitter sharedInstance] emitLoginWithUserID:@"userId"
                            	       userName:@"user_name"
-                         	      otherInfo:@{"custom_key":"value"}];
+                         	      otherInfo:@{@"custom_key":@"value"}];
 ```
 
 **Registration**
@@ -228,7 +228,7 @@ Records a user registration within the app
                                                country:@"country"
                                                  state:@"state"
                                                   city:@"city"
-                                             otherInfo:@{"custom_key":"value"}];
+                                             otherInfo:@{@"custom_key":@"value"}];
 ```
 
 **Facebook connect**
@@ -239,7 +239,7 @@ Allows access to Facebook services
 NSArray *permissions = @[[R1EmitterSocialPermission socialPermissionWithName:@"photos" granted:YES]];
 
 [[R1Emitter sharedInstance] emitFBConnectWithPermissions:permissions
-                                  	       otherInfo:@{"custom_key":"value"}];
+                                  	       otherInfo:@{@"custom_key":@"value"}];
 ```
 
 **Twitter connect**
@@ -252,7 +252,7 @@ NSArray *permissions = @[[R1EmitterSocialPermission socialPermissionWithName:@"p
 [[R1Emitter sharedInstance] emitTConnectWithUserID:@"12345"
                                           userName:@"user_name"
                                        permissions:permissions
-                                  	 otherInfo:@{"custom_key":"value"}];
+                                  	 otherInfo:@{@"custom_key":@"value"}];
 ```
 
 **User Info**
@@ -272,7 +272,7 @@ R1EmitterUserInfo *userInfo = [R1EmitterUserInfo userInfoWithUserID:@"userId"
                                 zip:@"zip"];
 
 [[R1Emitter sharedInstance] emitUserInfo:@"userId"
-                               otherInfo:@{"custom_key":"value"}];
+                               otherInfo:@{@"custom_key":@"value"}];
 ```
 
 **Upgrade**
@@ -280,7 +280,7 @@ R1EmitterUserInfo *userInfo = [R1EmitterUserInfo userInfoWithUserID:@"userId"
 Tracks an application version upgrade
 
 ```objc
-[[R1Emitter sharedInstance] emitUpgradeWithOtherInfo:@{"custom_key":"value"}];
+[[R1Emitter sharedInstance] emitUpgradeWithOtherInfo:@{@"custom_key":@"value"}];
 ```
 
 **Trial Upgrade**
@@ -288,7 +288,7 @@ Tracks an application version upgrade
 Tracks an application upgrade from a trial version to a full version
 
 ```objc
-[[R1Emitter sharedInstance] emitTrialUpgradeWithOtherInfo:@{"custom_key":"value"}];
+[[R1Emitter sharedInstance] emitTrialUpgradeWithOtherInfo:@{@"custom_key":@"value"}];
 ```
 
 **Screen View**
@@ -301,7 +301,7 @@ Basically, a page view, it provides info about that screen
                            						documentLocationUrl:@"http://www.example.com/path"
                               					   documentHostName:@"example.com"
                                   					   documentPath:@"path"
-                                     					  otherInfo:@{"custom_key":"value"}];
+                                     					  otherInfo:@{@"custom_key":@"value"}];
 ```
 
 **Transaction**
@@ -316,7 +316,7 @@ Basically, a page view, it provides info about that screen
                                   	 currency:@"USD"
                              	    shippingCosts:10.5
                             	   transactionTax:12.0
-                                 	otherInfo:@{"custom_key":"value"}];
+                                 	otherInfo:@{@"custom_key":@"value"}];
 ```
 
 **TransactionItem**
@@ -333,21 +333,21 @@ R1EmitterLineItem *lineItem = [R1EmitterLineItem itemWithID:@"product_id"
 
 [[R1Emitter sharedInstance] emitTransactionItemWithTransactionID:@"transaction_id"
                                                  	lineItem:lineItem
-                                                       otherInfo:@{"custom_key":"value"}];
+                                                       otherInfo:@{@"custom_key":@"value"}];
 ```
 
 **Create Cart**
 
 ```objc
 [[R1Emitter sharedInstance] emitCartCreateWithCartID:@"cart_id"
-                                	   otherInfo:@{"custom_key":"value"}];
+                                	   otherInfo:@{@"custom_key":@"value"}];
 ```
 
 **Delete Cart**
 
 ```objc
 [[R1Emitter sharedInstance] emitCartDeleteWithCartID:@"cart_id"
-                       			   otherInfo:@{"custom_key":"value"}];
+                       			   otherInfo:@{@"custom_key":@"value"}];
 ```
 
 **Add To Cart**
@@ -364,7 +364,7 @@ R1EmitterLineItem *lineItem = [R1EmitterLineItem itemWithID:@"product_id"
 
 [[R1Emitter sharedInstance] emitAddToCartWithCartID:@"cart_id"
         				   lineItem:lineItem
-                                 	  otherInfo:@{"custom_key":"value"}];
+                                 	  otherInfo:@{@"custom_key":@"value"}];
 ```
 
 **Delete From Cart**
@@ -381,7 +381,7 @@ R1EmitterLineItem *lineItem = [R1EmitterLineItem itemWithID:@"product_id"
 
 [[R1Emitter sharedInstance] emitDeleteFromCartWithCartID:@"cart_id"
         					lineItem:lineItem
-                                 	       otherInfo:@{"custom_key":"value"}];
+                                 	       otherInfo:@{@"custom_key":@"value"}];
 ```
 
 
